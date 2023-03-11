@@ -1,5 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
+import datetime as dt
 
 from .models import Achievement, AchievementCat, Cat, Owner
 
@@ -21,9 +22,14 @@ class CatSerializer(serializers.ModelSerializer):
         many=True,
         required=False  # поле не является обязательным
         )
+    age = serializers.SerializerMethodField()
     class Meta:
         model = Cat
-        fields = ('id', 'name', 'color', 'birth_year', 'owner', 'achievements')
+        fields = ('id', 'name', 'color', 'birth_year', 'owner',
+                  'achievements', 'age')
+        
+    def get_age(self, obj):
+        return dt.datetime.now().year - obj.birth_year
 
     def create(self, validated_data):
         # Если в исходном запросе не было поля achievements
