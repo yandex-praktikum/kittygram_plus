@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Cat, Owner
-from .serializers import CatSerializer, OwnerSerializer
+from .serializers import CatSerializer, OwnerSerializer, CatListSerializer
 
 
 class CatViewSet(viewsets.ModelViewSet):
@@ -27,6 +27,11 @@ class CatViewSet(viewsets.ModelViewSet):
         # объектов
         serializer = self.get_serializer(cats, many=True)
         return Response(serializer.data)
+    
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CatListSerializer
+        return CatSerializer
 
 
 class OwnerViewSet(viewsets.ModelViewSet):
