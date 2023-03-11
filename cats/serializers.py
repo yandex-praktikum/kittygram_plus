@@ -5,6 +5,23 @@ import webcolors
 
 from .models import Achievement, AchievementCat, Cat, Owner
 
+# Each tuple in the CHOICES constant represents a color option and consists of
+# two elements:
+#    the first element is the actual value that will be stored in the database
+#    when the option is selected (e.g. 'Gray', 'Black', 'White', etc.).
+#    the second element is the human-readable text that will be displayed in
+#    the  UI to describe the option (e.g. 'Серый', 'Чёрный', 'Белый', etc.).
+#
+# By using these nested tuples, you can define a mapping between the internal
+# database value and the external display value for each option, which makes
+# it easier to display and select color options in a user-friendly way.
+CHOICES = (
+        ('Gray', 'Серый'),
+        ('Black', 'Чёрный'),
+        ('White', 'Белый'),
+        ('Ginger', 'Рыжий'),
+        ('Mixed', 'Смешанный'),
+    )
 
 class Hex2NameColor(serializers.Field):
     def to_representation(self, value):
@@ -36,7 +53,8 @@ class CatSerializer(serializers.ModelSerializer):
         required=False  # поле не является обязательным
         )
     age = serializers.SerializerMethodField()
-    color = Hex2NameColor()
+    # color = Hex2NameColor()
+    color = serializers.ChoiceField(choices=CHOICES)
     class Meta:
         model = Cat
         fields = ('id', 'name', 'color', 'birth_year', 'owner',
